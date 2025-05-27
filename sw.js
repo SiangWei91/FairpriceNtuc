@@ -1,4 +1,4 @@
-const CACHE_NAME = 'inventory-pwa-cache-v1';
+const CACHE_NAME = 'inventory-pwa-cache-v1.1';
 const urlsToCache = [
   '/', // Alias for index.html
   '/index.html',
