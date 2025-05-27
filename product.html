@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Details</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="manifest.json" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Main container wraps everything -->
+      <h1 id="pageTitle">Product Details</h1>
+      <nav>
+        <a href="index.html">Back | 返回</a>
+      </nav>
+      <div id="uiMessagePanel" class="ui-message"></div>
+      <!-- Added UI Message Panel -->
+
+      <div class="product-details-section">
+        <h2 id="productName">[Product Name]</h2>
+        <p>
+          <strong>Packaging:</strong>
+          <span id="productPackaging">[Packaging]</span>
+        </p>
+        <p>
+          <strong>Item Code:</strong>
+          <span id="productItemCode">[Item Code]</span>
+        </p>
+
+        <h3>Current Stock | 剩余库存:</h3>
+        <div id="stockDetailsContainer">
+          <!-- Stock details will be listed here by script.js -->
+        </div>
+        <button
+          id="toggleProductHistoryBtn"
+          class="btn btn-secondary"
+          style="margin-top: 15px"
+        >
+          Transaction History | 记录
+        </button>
+        <button
+          id="exportToSheetBtn"
+          class="btn btn-secondary"
+          style="margin-left: 10px; margin-top: 15px"
+        >
+          Export
+        </button>
+        <button
+          id="importFromSheetBtn"
+          class="btn btn-info"
+          style="margin-left: 10px; margin-top: 15px"
+        >
+          Import
+        </button>
+        <div
+          id="productSpecificHistoryContainer"
+          style="display: none; margin-top: 15px"
+        >
+          <!-- Product-specific history table will be generated here by script.js -->
+        </div>
+      </div>
+      <!-- product-details-section closes here -->
+
+      <button id="toggleStockInFormBtn" class="btn btn-primary">
+        Stock In | 进货
+      </button>
+      <form id="stockInForm">
+        <h2>Stock In | 进货</h2>
+        <div>
+          <label for="stockInQuantity">Quantity | 数量:</label>
+          <input
+            type="number"
+            id="stockInQuantity"
+            name="stockInQuantity"
+            required
+            min="1"
+          />
+        </div>
+        <div>
+          <label for="stockInExpirationDate">Exp Date | 有效期:</label>
+          <input
+            type="date"
+            id="stockInExpirationDate"
+            name="stockInExpirationDate"
+            required
+          />
+        </div>
+        <div>
+          <label for="stockInDate">Transaction Date | 处理日期:</label>
+          <input type="date" id="stockInDate" name="stockInDate" />
+        </div>
+        <button type="submit">Submit | 确认</button>
+      </form>
+
+      <button id="toggleStockOutFormBtn" class="btn btn-primary">
+        Stock Out | 出货
+      </button>
+      <form id="stockOutForm">
+        <h2>Stock Out | 出货</h2>
+        <div>
+          <label for="stockOutBatchSelect">Balance Stock | 剩余库存:</label>
+          <select
+            id="stockOutBatchSelect"
+            name="stockOutBatchSelect"
+            required
+          ></select>
+        </div>
+        <div>
+          <label for="stockOutQuantity">Quantity | 数量:</label>
+          <input
+            type="number"
+            id="stockOutQuantity"
+            name="stockOutQuantity"
+            required
+            min="1"
+          />
+        </div>
+        <div>
+          <label for="stockOutDate">Transaction Date | 处理日期:</label>
+          <input type="date" id="stockOutDate" name="stockOutDate" />
+        </div>
+        <button type="submit">Submit | 确认</button>
+      </form>
+
+      <!-- Moving Save button and link inside the container -->
+      <!-- The "Save" button's functionality is currently not implemented as a global save.
+             It might be better to remove it if individual operations save automatically,
+             or repurpose it. For now, just ensuring it's structured correctly. -->
+      <div style="margin-top: 20px">
+        <!-- Added a wrapper for spacing -->
+        <button id="saveButton" style="display: none">Save</button>
+        <!-- Hiding Save button as it's not used -->
+        <a href="index.html" style="margin-left: 10px">Back | 返回</a>
+      </div>
+    </div>
+    <!-- container closes here, wrapping all content -->
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <p id="successModalMessage" style="margin-bottom: 20px"></p>
+        <button id="successModalOkButton" class="btn btn-primary">OK</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
