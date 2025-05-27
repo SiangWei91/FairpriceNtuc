@@ -6,7 +6,7 @@ const urlsToCache = [
   '/style.css',
   '/script.js',
   '/manifest.json',
-  '/icons/NTUC 192x192.png',
+  '/icons/NTUC192x192.png',
   '/icons/icon-512x512.png', // It's good to cache the manifest as well
   // Placeholder for icons, if they were present:
   // '/icons/icon-192x192.png',
