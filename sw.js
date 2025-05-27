@@ -3,7 +3,6 @@ const urlsToCache = [
   '/', // Alias for index.html
   '/index.html',
   '/product.html',
-  '/history.html',
   '/style.css',
   '/script.js',
   '/manifest.json', // It's good to cache the manifest as well
