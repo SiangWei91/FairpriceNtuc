@@ -1,0 +1,464 @@
+/* General Body and Container */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif; /* Modern system fonts */
+  line-height: 1.6;
+  margin: 0;
+  padding: 0; /* Remove body padding, container will handle it */
+  background-color: #eef1f5; /* Slightly softer background */
+  color: #333;
+}
+
+.container {
+  max-width: 900px; /* Slightly narrower for better readability on wide screens */
+  margin: 30px auto; /* More margin around the container */
+  overflow: hidden;
+  padding: 25px 30px; /* More padding inside container */
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer, more diffuse shadow */
+}
+
+/* Headers - Refined */
+h1 {
+  font-size: 2em; /* Larger for main page titles */
+  color: #333;
+  padding-bottom: 0.3em;
+  margin-bottom: 0.6em;
+  border-bottom: 2px solid #007bff; /* Accent color border */
+  display: inline-block; /* Make border only as wide as text */
+}
+
+h2 {
+  /* General h2, will be overridden by more specific form h2 if needed */
+  font-size: 1.6em;
+  color: #444;
+  margin-top: 1.5em; /* More space above h2 */
+  margin-bottom: 0.8em;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.4em;
+}
+
+h3 {
+  font-size: 1.3em;
+  color: #555;
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
+}
+
+p {
+  margin-bottom: 1em;
+}
+
+/* Links styling */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* --- New Button System --- */
+/* Base Button Style */
+.btn {
+  display: inline-block;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem; /* Slightly more padding */
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem; /* Standard border radius */
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  cursor: pointer;
+  text-decoration: none; /* For anchor tags styled as buttons */
+}
+
+.btn:hover {
+  text-decoration: none;
+}
+
+/* Primary Button (used for form toggles, main actions) */
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+/* Success Button (used for form submit buttons) */
+form button[type='submit'] {
+  /* Keep existing selector for specificity */
+  /* Apply .btn styles directly here as we can't add class to the element easily */
+  display: inline-block; /* from .btn */
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  cursor: pointer;
+  /* Specific success colors */
+  color: #fff;
+  background-color: #28a745; /* Green */
+  border-color: #28a745;
+}
+form button[type='submit']:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+/* Secondary/Action Button (e.g., View History toggle) */
+.btn-secondary {
+  /* Used for #toggleProductHistoryBtn */
+  color: #fff;
+  background-color: #6c757d; /* Gray */
+  border-color: #6c757d;
+}
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+/* General link styling to look like a button if needed */
+.btn-link-style {
+  /* For nav a if we want them to be button like */
+  display: inline-block;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  color: #007bff;
+  text-decoration: none;
+}
+.btn-link-style:hover {
+  background-color: #e9ecef;
+  text-decoration: none;
+}
+
+/* Form Styling Enhancements */
+form {
+  background: #fdfdfd; /* Slightly off-white for forms */
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 0.25rem; /* Consistent border radius */
+  border: 1px solid #e9ecef; /* Softer border for forms too */
+}
+
+form h2 {
+  /* Titles within forms */
+  margin-top: 0; /* Remove extra margin if h2 is first in form */
+  font-size: 1.4em; /* Adjust size */
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555; /* Existing color */
+}
+
+form input[type='text'],
+form input[type='number'],
+form input[type='date'],
+form select {
+  width: 100%; /* Changed from calc(100% - 22px) as box-sizing is used */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1em; /* Existing */
+}
+
+form input[type='text']:focus,
+form input[type='number']:focus,
+form input[type='date']:focus,
+form select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Collapsible Forms - display:none is managed by JS, here we ensure spacing */
+#stockInForm,
+#stockOutForm {
+  display: none; /* Hidden by default */
+  margin-top: 10px; /* Space below the toggle button */
+  /* Existing general 'form' styles will apply for padding, border etc. */
+}
+
+/* Table styling (General - for product history table) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+table th {
+  /* Default table header, can be overridden */
+  background-color: #e9ecef;
+  color: #333;
+}
+
+/* Product List Styling (index.html) */
+#productListContainer ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#productListContainer li {
+  display: block; /* Make the whole list item a block */
+  padding: 12px 15px; /* Adjust padding */
+  margin-bottom: 8px; /* Space between items */
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px; /* Slightly more rounded corners */
+  cursor: pointer; /* Indicate it's clickable */
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  /* box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Original shadow, can be kept or removed */
+}
+
+#productListContainer li:hover {
+  background-color: #e9ecef;
+  border-color: #007bff; /* Highlight with primary color on hover */
+}
+
+/* Style for the product name text within the list item */
+.product-name-display {
+  color: #333; /* Default text color, adjust if needed */
+  font-weight: 500; /* Slightly bolder */
+}
+
+/* Old styles for #productListContainer li a - Commented out */
+/*
+#productListContainer li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+#productListContainer li a:hover {
+  color: #007bff;
+}
+*/
+
+/* Navigation Links Styling */
+nav {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+nav a {
+  text-decoration: none;
+  color: #007bff;
+  padding: 8px 12px;
+  margin-right: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+nav a:hover,
+nav a:focus {
+  background-color: #e9ecef;
+  color: #0056b3;
+}
+
+/* Product Details Section Readability */
+.product-details-section {
+  margin-bottom: 30px;
+  padding: 20px; /* Add padding */
+  border: 1px solid #e9ecef; /* Softer border */
+  border-radius: 0.25rem;
+  background-color: #fcfdff; /* Very light background */
+  /* Removed dashed border-bottom */
+}
+
+.product-details-section h2 {
+  /* Product Name */
+  border-bottom: none; /* Remove border from product name h2 */
+  margin-top: 0; /* No extra margin if it's first in section */
+}
+
+.product-details-section h3 {
+  /* "Current Stock:" */
+  margin-top: 20px;
+  font-size: 1.1em; /* Slightly smaller */
+  color: #666;
+}
+
+#stockDetailsContainer {
+  /* Container for stock list */
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+#stockDetailsContainer ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+#stockDetailsContainer li {
+  padding: 8px 0; /* Vertical padding */
+  border-bottom: 1px dotted #eee; /* Dotted separator for stock items */
+  color: #444;
+  background-color: transparent; /* Ensure no override from other li styles */
+  box-shadow: none; /* Ensure no override */
+  margin-bottom: 0; /* Ensure no override */
+  border-radius: 0; /* Ensure no override */
+}
+#stockDetailsContainer li:last-child {
+  border-bottom: none;
+}
+#stockDetailsContainer strong {
+  color: #007bff;
+}
+
+/* Table Styling for general history table (if #historyTable was still used) */
+#historyTable {
+  /* This table is no longer used, but styles are kept for reference */
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+#historyTable th,
+#historyTable td {
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  text-align: left;
+}
+#historyTable th {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+#historyTable tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+#historyTable tbody tr:hover {
+  background-color: #e9ecef;
+}
+#historyTable .no-history td {
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+  color: #777;
+}
+
+/* Container for product-specific history table */
+#productSpecificHistoryContainer {
+  /* display: none; /* Managed by JS */
+  /* margin-top: 15px; /* Existing style from HTML */
+  overflow-x: auto; /* Enable horizontal scrolling if content overflows */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS devices */
+}
+
+/* Styles for product-specific history table (#productHistoryTable) */
+#productHistoryTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  min-width: 600px; /* Ensure table has a minimum width to trigger scroll */
+}
+#productHistoryTable th,
+#productHistoryTable td {
+  border: 1px solid #ddd;
+  padding: 8px 10px;
+  text-align: left;
+  white-space: nowrap; /* Prevent text wrapping in cells to ensure consistent column widths */
+}
+#productHistoryTable th {
+  background-color: #e9ecef; /* Lighter header for embedded table */
+  color: #333;
+  font-weight: bold;
+}
+#productHistoryTable tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+#productHistoryTable tbody tr:hover {
+  background-color: #e2e6ea;
+}
+
+/* UI Message Panel Styling */
+.ui-message {
+  padding: 10px 15px;
+  margin: 15px 0;
+  border-radius: 4px;
+  font-size: 0.95em;
+  display: none;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.ui-message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+.ui-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Modal Styling */
+.modal {
+  display: none; /* Hidden by default, changed to 'flex' by JS */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity - backdrop */
+  justify-content: center; /* Center content horizontally (for flex display) */
+  align-items: center; /* Center content vertically (for flex display) */
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: auto; /* Fallback for non-flex centering */
+  padding: 25px 30px;
+  border: 1px solid #888;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 450px; /* Max width for the modal panel */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+#successModalOkButton {
+  /* Uses .btn and .btn-primary which are already defined. */
+  margin-top: 10px; /* Add some space if needed */
+}
