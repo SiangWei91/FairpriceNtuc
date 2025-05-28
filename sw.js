@@ -1,4 +1,4 @@
-const CACHE_NAME = 'inventory-pwa-cache-v1.2';
+const CACHE_NAME = 'inventory-pwa-cache-v1.3';
 const urlsToCache = [
   'index.html', // Alias for index.html
   'product.html',
@@ -93,15 +93,32 @@ self.addEventListener('activate', (event) => {
   console.log('Service Worker: Activate event in progress.');
   const cacheWhitelist = [CACHE_NAME]; // Current cache name
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            console.log('Service Worker: Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    caches
+      .keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheWhitelist.indexOf(cacheName) === -1) {
+              console.log('Service Worker: Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      })
+      .then(() => {
+        // After cleaning old caches, message clients to clear localStorage
+        return self.clients
+          .matchAll({ type: 'window', includeUncontrolled: true })
+          .then((clients) => {
+            if (clients && clients.length) {
+              clients.forEach((client) => {
+                client.postMessage({ type: 'CLEAR_LOCAL_STORAGE' });
+              });
+              console.log(
+                'Service Worker: Sent CLEAR_LOCAL_STORAGE message to clients.'
+              );
+            }
+          });
+      })
   );
 });
