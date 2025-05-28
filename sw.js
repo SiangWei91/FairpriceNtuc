@@ -1,18 +1,17 @@
 const CACHE_NAME = 'inventory-pwa-cache-v1.1';
 const urlsToCache = [
-  '/', // Alias for index.html
-  '/index.html',
-  '/product.html',
-  '/style.css',
-  '/script.js',
-  '/manifest.json',
-  '/icons/NTUC192x192.png',
-  '/icons/icon-512x512.png', // It's good to cache the manifest as well
+  'index.html', // Alias for index.html
+  'index.html',
+  'product.html',
+  'style.css',
+  'script.js',
+  'manifest.json',
+  'icons/NTUC192x192.png',
+  'icons/icon-512x512.png', // It's good to cache the manifest as well
   // Placeholder for icons, if they were present:
   // '/icons/icon-192x192.png',
   // '/icons/icon-512x512.png'
 ];
-
 // Install event: cache the app shell
 self.addEventListener('install', (event) => {
   console.log('Service Worker: Install event in progress.');
