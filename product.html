@@ -43,15 +43,17 @@
           id="exportToSheetBtn"
           class="btn btn-secondary"
           style="margin-left: 10px; margin-top: 15px"
+          aria-label="Export to Google Sheet"
         >
-          Export
+          📤
         </button>
         <button
           id="importFromSheetBtn"
           class="btn btn-info"
           style="margin-left: 10px; margin-top: 15px"
+          aria-label="Import from Google Sheet"
         >
-          Import
+          📥
         </button>
         <div
           id="productSpecificHistoryContainer"
@@ -80,15 +82,16 @@
         <div>
           <label for="stockInExpirationDate">Exp Date | 有效期:</label>
           <input
-            type="date"
+            type="text"
             id="stockInExpirationDate"
             name="stockInExpirationDate"
+            placeholder="DD/MM/YYYY"
             required
           />
         </div>
         <div>
           <label for="stockInDate">Transaction Date | 处理日期:</label>
-          <input type="date" id="stockInDate" name="stockInDate" />
+          <input type="text" id="stockInDate" name="stockInDate" placeholder="DD/MM/YYYY" />
         </div>
         <button type="submit">Submit | 确认</button>
       </form>
@@ -118,7 +121,7 @@
         </div>
         <div>
           <label for="stockOutDate">Transaction Date | 处理日期:</label>
-          <input type="date" id="stockOutDate" name="stockOutDate" />
+          <input type="text" id="stockOutDate" name="stockOutDate" placeholder="DD/MM/YYYY" />
         </div>
         <button type="submit">Submit | 确认</button>
       </form>
