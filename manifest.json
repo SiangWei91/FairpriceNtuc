@@ -2,7 +2,7 @@
     "name": "Product Inventory PWA",
     "short_name": "Inventory",
     "description": "A PWA to track product inventory, quantities, and expiration dates.",
-    "start_url": "/index.html",
+    "start_url": "index.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#333333",
