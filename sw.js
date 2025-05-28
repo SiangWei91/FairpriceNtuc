@@ -1,7 +1,6 @@
-const CACHE_NAME = 'inventory-pwa-cache-v1.1';
+const CACHE_NAME = 'inventory-pwa-cache-v1.2';
 const urlsToCache = [
   'index.html', // Alias for index.html
-  'index.html',
   'product.html',
   'style.css',
   'script.js',
@@ -12,6 +11,7 @@ const urlsToCache = [
   // '/icons/icon-192x192.png',
   // '/icons/icon-512x512.png'
 ];
+
 // Install event: cache the app shell
 self.addEventListener('install', (event) => {
   console.log('Service Worker: Install event in progress.');
