@@ -462,3 +462,78 @@ nav a:focus {
   /* Uses .btn and .btn-primary which are already defined. */
   margin-top: 10px; /* Add some space if needed */
 }
+
+@media screen and (max-width: 600px) {
+  .container {
+    width: 100%;            /* Utilize full screen width */
+    margin-top: 10px;       /* Small top margin */
+    margin-bottom: 10px;    /* Small bottom margin */
+    margin-left: 0;         /* Remove left auto-margin for left alignment */
+    margin-right: 0;        /* Remove right auto-margin */
+    padding-left: 12px;     /* Padding to prevent content from touching screen edges */
+    padding-right: 12px;    /* Padding to prevent content from touching screen edges */
+    box-sizing: border-box; /* Ensures padding is included within the 100% width */
+    /* border-radius: 0; Optional: if user wants to remove rounded corners on small screens for edge-to-edge feel */
+    /* The existing border-radius from the main .container style will apply if not overridden here. */
+  }
+
+  h1 {
+    font-size: 1.8em; /* Slightly smaller main titles */
+  }
+
+  h2 {
+    font-size: 1.4em; /* Slightly smaller section titles */
+  }
+
+  /* Forms and their content are already width: 100% of their parent, 
+     so they will expand with the container. 
+     We can reduce form padding if needed, but let's start with container adjustments.
+  */
+  form {
+    padding: 15px; /* Reduce form padding slightly */
+  }
+
+  /* Adjust button padding for smaller screens if they feel too large */
+  .btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  form button[type='submit'] {
+    padding: 0.4rem 0.8rem; /* Ensure submit buttons also scale */
+    font-size: 0.9rem;
+  }
+
+  /* Specifically for product list items on index.html to ensure they are not too cramped */
+  #productListContainer li {
+    padding: 10px 12px; 
+  }
+
+  #productHistoryTable {
+    min-width: 0; /* Allow table to shrink more naturally */
+    font-size: 0.85em; /* Reduce font size in the table */
+  }
+
+  #productHistoryTable th,
+  #productHistoryTable td {
+    white-space: normal; /* Allow text wrapping */
+    padding: 6px 5px;   /* Reduce padding in cells */
+    word-break: break-word; /* Help break long words if necessary, though 'normal' should handle most cases */
+  }
+
+  #productHistoryTable th {
+    /* Optional: if headers still too wide, could try to abbreviate or use vertical writing, 
+       but start with wrapping and padding reduction. */
+  }
+
+  /* Existing rules in @media (max-width: 600px) should remain */
+
+  #toggleStockInFormBtn {
+    margin-bottom: 15px; /* Add space below the Stock In toggle button */
+  }
+
+  /* Make sure this doesn't conflict with other button margins if they are side-by-side.
+     These buttons are block-like or will be due to form toggling behavior,
+     so margin-bottom on the first or margin-top on the second is appropriate.
+  */
+}
