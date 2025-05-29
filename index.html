@@ -14,9 +14,12 @@
             <!-- Product list will be dynamically populated here -->
         </div>
         <div class="global-actions-container" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
-            <button id="exportAllBtn" class="btn btn-secondary" aria-label="Export All Data to Google Sheet">📤</button>
-            <button id="importAllBtn" class="btn btn-info" style="margin-left: 10px;" aria-label="Import All Data from Google Sheet">📥</button>
+            <button id="exportAllBtn" class="btn btn-secondary" aria-label="Export All Data to Google Sheet">Export All</button>
+            <button id="importAllBtn" class="btn btn-info" style="margin-left: 10px;" aria-label="Import All Data from Google Sheet">Import All</button>
         </div>
+    </div>
+    <div id="loadingOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; color: white; font-size: 20px; display: none;">
+        <p>Processing... Please wait.</p>
     </div>
     <script src="script.js"></script>
 </body>
