@@ -465,13 +465,13 @@ nav a:focus {
 
 @media screen and (max-width: 600px) {
   .container {
-    width: 100%;            /* Utilize full screen width */
-    margin-top: 10px;       /* Small top margin */
-    margin-bottom: 10px;    /* Small bottom margin */
-    margin-left: 0;         /* Remove left auto-margin for left alignment */
-    margin-right: 0;        /* Remove right auto-margin */
-    padding-left: 12px;     /* Padding to prevent content from touching screen edges */
-    padding-right: 12px;    /* Padding to prevent content from touching screen edges */
+    width: 100%; /* Utilize full screen width */
+    margin-top: 10px; /* Small top margin */
+    margin-bottom: 10px; /* Small bottom margin */
+    margin-left: 0; /* Remove left auto-margin for left alignment */
+    margin-right: 0; /* Remove right auto-margin */
+    padding-left: 12px; /* Padding to prevent content from touching screen edges */
+    padding-right: 12px; /* Padding to prevent content from touching screen edges */
     box-sizing: border-box; /* Ensures padding is included within the 100% width */
     /* border-radius: 0; Optional: if user wants to remove rounded corners on small screens for edge-to-edge feel */
     /* The existing border-radius from the main .container style will apply if not overridden here. */
@@ -506,7 +506,7 @@ nav a:focus {
 
   /* Specifically for product list items on index.html to ensure they are not too cramped */
   #productListContainer li {
-    padding: 10px 12px; 
+    padding: 10px 12px;
   }
 
   #productHistoryTable {
@@ -517,7 +517,7 @@ nav a:focus {
   #productHistoryTable th,
   #productHistoryTable td {
     white-space: normal; /* Allow text wrapping */
-    padding: 6px 5px;   /* Reduce padding in cells */
+    padding: 6px 5px; /* Reduce padding in cells */
     word-break: break-word; /* Help break long words if necessary, though 'normal' should handle most cases */
   }
 
