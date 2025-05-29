@@ -329,47 +329,21 @@ function isValidDDMMYYYY(dateString) {
   return true;
 }
 
-function autoFormatDateInput(event) {
-  const input = event.target;
-  let value = input.value.replace(/\D/g, ''); // Remove all non-digits
-  let originalLength = value.length;
+// autoFormatDateInput function was removed as it is no longer used.
 
-  if (originalLength > 8) {
-    value = value.substring(0, 8); // DDMMYYYY
-    originalLength = 8;
-  }
+function handleSegmentedDateInput(event) {
+    const input = event.target;
+    input.value = input.value.replace(/\D/g, ''); // Allow only digits
 
-  let formattedValue = '';
-  if (originalLength > 0) {
-    formattedValue = value.substring(0, 2); // DD
-  }
-  if (originalLength > 2) {
-    formattedValue += '/' + value.substring(2, 4); // DD/MM
-  }
-  if (originalLength > 4) {
-    let yearPart = value.substring(4, originalLength);
-    if (
-      originalLength === 6 &&
-      parseInt(yearPart, 10) >= 0 &&
-      parseInt(yearPart, 10) <= 99
-    ) {
-      // Assume 'YY' needs to become '20YY'
-      // Adjust the startYear based on typical product expiry (e.g. current year up to +30 years is 20xx)
-      // const currentYearShort = new Date().getFullYear() % 100; // e.g. 24 for 2024
-      // const inputYearShort = parseInt(yearPart, 10);
-      // if inputYearShort is like 27, and current year is 24, it's likely 2027
-      // if inputYearShort is 05, it's likely 2005 (past) or 2105 (far future)
-      // For simplicity, if YY is e.g. 00-50, assume 20YY. If 51-99, could assume 19YY or 20YY based on context.
-      // Given it's an expiration date, '20' prefix is very likely.
-      yearPart = '20' + yearPart;
+    // Check if maxLength is a valid number before parsing
+    const maxLength = parseInt(input.maxLength, 10);
+    if (!isNaN(maxLength) && input.value.length === maxLength) {
+        if (input.id === 'expDay') {
+            document.getElementById('expMonth')?.focus();
+        } else if (input.id === 'expMonth') {
+            document.getElementById('expYear')?.focus();
+        }
     }
-    formattedValue += '/' + yearPart;
-  }
-
-  // Only update if the formatted value is different, to avoid cursor jumping issues
-  if (input.value !== formattedValue) {
-    input.value = formattedValue;
-  }
 }
 
 // --- UI Message Function (Modal for Success, Panel for Error) ---
@@ -404,254 +378,15 @@ function showUIMessage(message, type = 'success', duration = 3000) {
 }
 
 // --- Export/Import Functions (Keep Async as they involve fetch) ---
-async function exportTransactionsToGoogleSheet(productId, productName) {
-  if (!productId || !productName) {
-    showUIMessage('Product information is missing for export.', 'error');
-    return;
-  }
-  showUIMessage('Fetching transactions for export...', 'success', 1500);
-
-  const allLogs = getTransactionLogs(); // Now synchronous LS call
-  const productLogs = allLogs.filter((log) => log.productId === productId);
-
-  if (!productLogs || productLogs.length === 0) {
-    showUIMessage(
-      'No transaction history available for this product to export.',
-      'error',
-      4000
-    );
-    return;
-  }
-
-  const transactionsForExport = productLogs.map((log) => ({
-    date: log.date,
-    type: log.type,
-    quantity: log.quantity,
-    expirationDate: log.expirationDate || '',
-  }));
-
-  const payload = {
-    productName: productName,
-    productId: productId,
-    transactions: transactionsForExport,
-  };
-
-  const googleScriptURL =
-    'https://script.google.com/macros/s/AKfycbwYbA16WcmBr_jQgOF2RimX0rssTnMUcaCXevY8I8q6qzc-Anl96FYoKcNGLbyPwDuV/exec';
-  showUIMessage(
-    `Exporting ${productLogs.length} transactions for ${productName}...`,
-    'success',
-    3000
-  );
-
-  try {
-    const response = await fetch(googleScriptURL, {
-      method: 'POST',
-      body: JSON.stringify(payload), // Note: no headers needed
-    });
-    const result = await response.json();
-    if (result.status === 'success') {
-      showUIMessage(
-        result.message || `Export successful for ${productName}.`,
-        'success',
-        5000
-      );
-    } else {
-      throw new Error(result.message || 'Unknown error during export.');
-    }
-  } catch (error) {
-    showUIMessage(`Export failed: ${error.message}`, 'error', 5000);
-  }
-}
-
-async function importTransactionsFromGoogleSheet(productId) {
-  console.log(
-    'Starting importTransactionsFromGoogleSheet for productId:',
-    productId
-  );
-
-  if (
-    !confirm(
-      `This will REPLACE all local transactions for this product with data from the Google Sheet. Are you sure?`
-    )
-  ) {
-    console.log('User cancelled the import operation');
-    return;
-  }
-
-  showUIMessage('Importing transactions... Please wait.', 'success', 2000);
-
-  const googleScriptURL = `https://script.google.com/macros/s/AKfycbwYbA16WcmBr_jQgOF2RimX0rssTnMUcaCXevY8I8q6qzc-Anl96FYoKcNGLbyPwDuV/exec?action=import&productId=${productId}&t=${Date.now()}`;
-  console.log('Constructed Google Script URL:', googleScriptURL);
-
-  try {
-    console.log('Starting fetch request to Google Script...');
-    const response = await fetch(googleScriptURL, {
-      method: 'GET',
-      cache: 'no-cache',
-    });
-
-    console.log('Received response, status:', response.status);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('HTTP error details:', errorText);
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log('Parsed JSON response:', result);
-
-    if (result.status === 'success' && Array.isArray(result.data)) {
-      console.log(
-        'Success response received with data array, length:',
-        result.data.length
-      );
-
-      if (result.data.length === 0) {
-        console.log('No transactions found in sheet for this product');
-        showUIMessage(
-          'No transactions found in the sheet for this product.',
-          'error',
-          4000
-        );
-        return;
-      }
-
-      // Step 1: Clear existing transactions for this product
-      let allLogs = getTransactionLogs();
-      console.log(
-        'Current local transaction logs (before filtering):',
-        allLogs
-      );
-
-      const otherProductLogs = allLogs.filter(
-        (log) => log.productId !== productId
-      );
-      console.log('Filtered logs (other products):', otherProductLogs);
-
-      // Step 2: Clear existing inventory for this product
-      let allInventory = getInventory();
-      const otherProductInventory = allInventory.filter(
-        (item) => item.productId !== productId
-      );
-      console.log('Cleared inventory for product:', productId);
-
-      // Step 3: Process imported transactions and rebuild inventory
-      const newLogsForStorage = [...otherProductLogs];
-      const newInventoryForStorage = [...otherProductInventory];
-
-      // Sort transactions by date (oldest first) to properly rebuild inventory
-      const sortedTransactions = result.data.sort((a, b) => {
-        // Convert DD/MM/YYYY to YYYY-MM-DD for proper date comparison
-        const dateA = convertDDMMYYYYtoYYYYMMDD(a.date);
-        const dateB = convertDDMMYYYYtoYYYYMMDD(b.date);
-        return dateA.localeCompare(dateB);
-      });
-
-      console.log('Processing sorted transactions from sheet:');
-      sortedTransactions.forEach((tx, index) => {
-        console.log(`Processing transaction ${index + 1}:`, tx);
-
-        // Create log entry
-        const newLogEntry = {
-          id: `import-${Date.now()}-${index}`, // Generate unique ID for imported transactions
-          productId: productId,
-          productName: tx.productName || 'Unknown Product',
-          type: tx.type,
-          quantity: parseInt(tx.quantity, 10),
-          date: tx.date, // Keep DD/MM/YYYY format from backend
-          expirationDate: tx.expirationDate || null,
-        };
-        console.log(`Created new log entry ${index + 1}:`, newLogEntry);
-
-        newLogsForStorage.push(newLogEntry);
-
-        // Update inventory based on transaction type
-        if (tx.type === 'in') {
-          // Add to inventory
-          const existingInventoryIndex = newInventoryForStorage.findIndex(
-            (item) =>
-              item.productId === productId &&
-              item.expirationDate === tx.expirationDate
-          );
-
-          if (existingInventoryIndex !== -1) {
-            // Update existing batch
-            newInventoryForStorage[existingInventoryIndex].quantity += parseInt(
-              tx.quantity,
-              10
-            );
-          } else {
-            // Create new batch
-            newInventoryForStorage.push({
-              productId: productId,
-              quantity: parseInt(tx.quantity, 10),
-              expirationDate: tx.expirationDate,
-            });
-          }
-        } else if (tx.type === 'out') {
-          // Remove from inventory
-          const existingInventoryIndex = newInventoryForStorage.findIndex(
-            (item) =>
-              item.productId === productId &&
-              item.expirationDate === tx.expirationDate
-          );
-
-          if (existingInventoryIndex !== -1) {
-            newInventoryForStorage[existingInventoryIndex].quantity -= parseInt(
-              tx.quantity,
-              10
-            );
-            // Keep items with 0 quantity (as per original behavior)
-          }
-        }
-      });
-
-      // Step 4: Save updated data
-      console.log('Final logs array to be saved:', newLogsForStorage);
-      console.log('Final inventory array to be saved:', newInventoryForStorage);
-
-      saveTransactionLogs(newLogsForStorage);
-      saveInventory(newInventoryForStorage);
-
-      console.log(
-        `Successfully saved ${result.data.length} new transactions and updated inventory`
-      );
-
-      showUIMessage(
-        `Successfully imported ${result.data.length} transactions and updated inventory.`,
-        'success',
-        5000
-      );
-
-      // Refresh displays
-      displayProductDetails();
-      const productHistoryContainer = document.getElementById(
-        'productSpecificHistoryContainer'
-      );
-      if (
-        productHistoryContainer &&
-        productHistoryContainer.style.display !== 'none'
-      ) {
-        console.log('Refreshing product specific history display');
-        displayProductSpecificHistory(productId);
-      }
-    } else {
-      console.error('Unexpected response format or error:', result);
-      throw new Error(
-        result.message || 'Failed to import data or data format error.'
-      );
-    }
-  } catch (error) {
-    console.error('Import failed with error:', error);
-    showUIMessage(`Import failed: ${error.message}`, 'error', 5000);
-  }
-
-  console.log('Import process completed');
-}
+// Individual product export/import functions (exportTransactionsToGoogleSheet, importTransactionsFromGoogleSheet) were removed.
 
 async function handleExportAllData() {
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  const exportAllButton = document.getElementById('exportAllBtn');
+
+  if (loadingOverlay) loadingOverlay.style.display = 'flex';
+  if (exportAllButton) exportAllButton.disabled = true;
+
   console.log('Starting Export All Data...');
   showUIMessage('Preparing all product data for export...', 'success', 2000);
 
@@ -720,10 +455,19 @@ async function handleExportAllData() {
   } catch (error) {
     console.error('Export All Data failed:', error);
     showUIMessage(`Export All Data failed: ${error.message}`, 'error', 5000);
+  } finally {
+    if (loadingOverlay) loadingOverlay.style.display = 'none';
+    if (exportAllButton) exportAllButton.disabled = false;
   }
 }
 
 async function handleImportAllData() {
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  const importAllButton = document.getElementById('importAllBtn');
+
+  if (loadingOverlay) loadingOverlay.style.display = 'flex';
+  if (importAllButton) importAllButton.disabled = true;
+
   console.log('Starting Import All Data...');
   showUIMessage(
     'Fetching all data from Google Sheet... Please wait.',
@@ -894,6 +638,9 @@ async function handleImportAllData() {
   } catch (error) {
     console.error('Import All Data failed:', error);
     showUIMessage(`Import All Data failed: ${error.message}`, 'error', 6000);
+  } finally {
+    if (loadingOverlay) loadingOverlay.style.display = 'none';
+    if (importAllButton) importAllButton.disabled = false;
   }
 }
 
@@ -907,10 +654,16 @@ function handleStockIn(event) {
     return;
   }
   const quantityInput = document.getElementById('stockInQuantity');
-  const expirationDateInput = document.getElementById('stockInExpirationDate');
+  // Get values from segmented date inputs
+  const expDayInput = document.getElementById('expDay');
+  const expMonthInput = document.getElementById('expMonth');
+  const expYearInput = document.getElementById('expYear');
   const transactionDateInput = document.getElementById('stockInDate');
+
   const quantity = parseInt(quantityInput.value, 10);
-  const expirationDateString = expirationDateInput.value;
+  const dayVal = expDayInput.value;
+  const monthVal = expMonthInput.value;
+  const yearVal = expYearInput.value;
   const transactionDateString = transactionDateInput.value;
 
   if (isNaN(quantity) || quantity <= 0) {
@@ -921,14 +674,31 @@ function handleStockIn(event) {
     return;
   }
 
-  if (!isValidDDMMYYYY(expirationDateString)) {
+  // Handle Empty Fields for expiration date
+  if (!dayVal || !monthVal || !yearVal) {
+    showUIMessage('Expiration date fields cannot be empty.', 'error');
+    return;
+  }
+
+  // Construct Date String for Validation (DD/MM/YYYY)
+  const paddedDay = dayVal.padStart(2, '0');
+  const paddedMonth = monthVal.padStart(2, '0');
+  // Year should be 4 digits as per HTML maxlength and subsequent validation.
+  const expirationDateStringForValidation = `${paddedDay}/${paddedMonth}/${yearVal}`;
+
+  // Validate Constructed Date
+  if (!isValidDDMMYYYY(expirationDateStringForValidation)) {
     showUIMessage(
-      'Please enter a valid expiration date in DD/MM/YYYY format.',
+      'Please enter a valid expiration date in DD/MM/YYYY format (e.g., 01/01/2025).',
       'error'
     );
     return;
   }
-  const expirationDate = convertDDMMYYYYtoYYYYMMDD(expirationDateString); // Convert to YYYY-MM-DD
+
+  // Convert to YYYY-MM-DD for Storage (after successful validation)
+  // The expirationDateStringForValidation is already padded and validated.
+  const expirationDate = convertDDMMYYYYtoYYYYMMDD(expirationDateStringForValidation);
+
 
   let transactionDate = ''; // To store YYYY-MM-DD
   if (transactionDateString) {
@@ -948,7 +718,10 @@ function handleStockIn(event) {
 
   addStock(productId, quantity, expirationDate, transactionDate); // Now synchronous
   quantityInput.value = '';
-  expirationDateInput.value = '';
+  // Clear segmented date inputs
+  expDayInput.value = '';
+  expMonthInput.value = '';
+  expYearInput.value = '';
   transactionDateInput.value = formatDateToDDMMYYYY(
     new Date().toISOString().split('T')[0]
   );
@@ -1024,6 +797,14 @@ function handleStockOut(event) {
     );
     displayProductDetails(); // Refresh details
     showUIMessage('Stock removed successfully!', 'success');
+
+    // Refresh product specific history if it's visible
+    const productSpecificHistoryContainer = document.getElementById('productSpecificHistoryContainer');
+    if (productSpecificHistoryContainer && productSpecificHistoryContainer.style.display !== 'none') {
+      if (productId) { // productId is already defined in this function's scope
+        displayProductSpecificHistory(productId);
+      }
+    }
   }
   // Error messages are now handled within removeStock or by its return value
 }
@@ -1201,7 +982,7 @@ function displayProductSpecificHistory(productId) {
   const tbody = table.createTBody();
   productLogs.forEach((log) => {
     const row = tbody.insertRow();
-    row.insertCell().textContent = log.date; // Already in DD/MM/YYYY format
+    row.insertCell().textContent = formatDateToDDMMYYYY(log.date);
     row.insertCell().textContent = log.type.toUpperCase();
     row.insertCell().textContent = log.quantity;
     row.insertCell().textContent = log.expirationDate
@@ -1355,60 +1136,25 @@ function initProductPageEventListeners() {
     successModalOkButton.dataset.listenerAttachedM = 'true';
   }
 
-  const exportButton = document.getElementById('exportToSheetBtn');
-  if (exportButton && !exportButton.dataset.listenerAttachedE) {
-    exportButton.addEventListener('click', async () => {
-      // Kept async due to fetch
-      const password = prompt('Enter password to export:');
-      if (password !== '1234') {
-        showUIMessage('Incorrect password.', 'error');
-        return;
-      }
-      const pageParams = new URLSearchParams(window.location.search);
-      const productId = pageParams.get('id');
-      const productNameEl = document.getElementById('productName');
-      const productName = productNameEl
-        ? productNameEl.textContent
-        : 'Unknown Product';
+  // Event listeners for exportToSheetBtn and importFromSheetBtn were removed.
 
-      if (productId) {
-        await exportTransactionsToGoogleSheet(productId, productName);
-      } else {
-        showUIMessage('Cannot export: Product ID not found.', 'error');
-      }
-    });
-    exportButton.dataset.listenerAttachedE = 'true';
+  // The event listener for 'stockInExpirationDate' that called autoFormatDateInput was removed.
+
+  const expDayField = document.getElementById('expDay');
+  const expMonthField = document.getElementById('expMonth');
+  const expYearField = document.getElementById('expYear');
+
+  if (expDayField && !expDayField.dataset.listenerAttachedSeg) {
+    expDayField.addEventListener('input', handleSegmentedDateInput);
+    expDayField.dataset.listenerAttachedSeg = 'true';
   }
-
-  const importButton = document.getElementById('importFromSheetBtn');
-  if (importButton && !importButton.dataset.listenerAttachedI) {
-    // Unique key for import
-    importButton.addEventListener('click', async () => {
-      // Kept async due to fetch
-      const password = prompt('Enter password to import:');
-      if (password !== '1234') {
-        showUIMessage('Incorrect password.', 'error');
-        return;
-      }
-      const pageParams = new URLSearchParams(window.location.search);
-      const productId = pageParams.get('id');
-      // const productNameEl = document.getElementById('productName'); // productName is not used by importTransactionsFromGoogleSheet
-      // const productName = productNameEl ? productNameEl.textContent : 'Unknown Product';
-
-      if (productId) {
-        await importTransactionsFromGoogleSheet(productId); // Removed productName as it's not a parameter for this function
-      } else {
-        showUIMessage('Cannot import: Product ID not found.', 'error');
-      }
-    });
-    importButton.dataset.listenerAttachedI = 'true';
+  if (expMonthField && !expMonthField.dataset.listenerAttachedSeg) {
+    expMonthField.addEventListener('input', handleSegmentedDateInput);
+    expMonthField.dataset.listenerAttachedSeg = 'true';
   }
-
-  const expirationDateInput = document.getElementById('stockInExpirationDate');
-  if (expirationDateInput && !expirationDateInput.dataset.listenerAttachedAF) {
-    // AF for AutoFormat
-    expirationDateInput.addEventListener('input', autoFormatDateInput);
-    expirationDateInput.dataset.listenerAttachedAF = 'true';
+  if (expYearField && !expYearField.dataset.listenerAttachedSeg) {
+    expYearField.addEventListener('input', handleSegmentedDateInput);
+    expYearField.dataset.listenerAttachedSeg = 'true';
   }
 }
 
